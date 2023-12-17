@@ -1,6 +1,6 @@
 
 var form = document.querySelector('#form');
-var itemList = document.querySelector('#items');
+var table = document.querySelector('#tab');
 
 form.addEventListener('submit',addItem);
 function addItem(e){
@@ -19,29 +19,35 @@ function addItem(e){
 	//inserting in local storage
 	localStorage.setItem(key,objJSON);
 	// Create new li element
-	let li = document.createElement('li');
-	li.className = 'list-group-item';
-	let newDiv=document.createElement('div');
-	newDiv.appendChild(document.createTextNode(itemAmt +' - '));
-	newDiv.appendChild(document.createTextNode(itemDes +' - '));
-	newDiv.appendChild(document.createTextNode(itemCat));
-	li.append(newDiv);
+	let rw = document.createElement('tr');
+	let colAmt=document.createElement('td');
+	let colDes=document.createElement('td');
+	let colCat=document.createElement('td');
+	colAmt.appendChild(document.createTextNode(itemAmt));
+	colDes.appendChild(document.createTextNode(itemDes));
+	colCat.appendChild(document.createTextNode(itemCat));
+	rw.append(colAmt);
+	rw.append(colDes);
+	rw.append(colCat);
 	var delbtn=document.createElement('button');
 	delbtn.appendChild(document.createTextNode('X'));
-	delbtn.className='btn btn-danger btn-sm delete';
+	delbtn.className='btn btn-danger delete';
 	 var editBtn = document.createElement('button');
 	editBtn.appendChild(document.createTextNode('edit'));
-	editBtn.className = 'btn btn-sm btn-secondary';
-  	li.appendChild(editBtn);;
-	li.appendChild(delbtn);
-	itemList.appendChild(li);
+	editBtn.className = 'btn btn-primary';
+	let newDiv=document.createElement('div');
+	newDiv.className='btn-group';
+	newDiv.appendChild(editBtn);
+	newDiv.appendChild(delbtn);
+	rw.appendChild(newDiv);
+	table.appendChild(rw);
 	//delete
 	delbtn.addEventListener('click', removeItem);
 	function removeItem(e){
 		if(e.target.classList.contains('delete')){
 		if(confirm('Remove this Item?')){
-			let li = e.target.parentElement;
-			itemList.removeChild(li);
+			let tr = e.target.parentElement.parentElement;
+			table.removeChild(tr);
 			localStorage.removeItem(key);
 		}
 		}
@@ -50,8 +56,8 @@ function addItem(e){
 	editBtn.addEventListener('click',edit);
 	function edit(e){
 		localStorage.removeItem(key);
-		let li=e.target.parentElement;
-			itemList.removeChild(li);
+		let tr=e.target.parentElement.parentElement;
+		table.removeChild(tr);
 		let amt=document.querySelector('#amount');
 		let des=document.querySelector('#description');
 		let cat=document.querySelector('#category');
